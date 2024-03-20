@@ -16,16 +16,30 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-    // Reset form fields after submission
-    setFormData({
-      name: '',
-      email: '',
-      message: ''
-    });
+    try {
+      console.log('Form data to be submitted:', formData); // Log the form data before submitting
+      const response = await fetch('api', { // Corrected endpoint URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        console.log('Form submission successful:', await response.json());
+        setFormData({
+          name: '',
+          email: '',
+          message: '',
+        });
+      } else {
+        console.error('Failed to submit form:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
